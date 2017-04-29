@@ -22,7 +22,7 @@ function varargout = Music_Player(varargin)
 
 % Edit the above text to modify the response to help Music_Player
 
-% Last Modified by GUIDE v2.5 28-Apr-2017 19:22:16
+% Last Modified by GUIDE v2.5 29-Apr-2017 15:20:24
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -267,25 +267,33 @@ function btnPlay_Callback(hObject, eventdata, handles)
 SongList = findobj('Tag', 'lst_Music');%'findobj' to get the whole object
 SongIndex = get(SongList,'Value');%get the data from the object
 
-cellMaster = handles.data;
-Songs = cellMaster{1};
+Songs = handles.data{1};
 
 name = Songs{SongIndex,1};
 path = Songs{SongIndex,2};
 
 pathname = char(strcat(path,name));
+handles.pathname = pathname;
+guidata(hObject,handles)
 pathname
-[y,Fs] = audioread(pathname);
-sound(y,Fs);
 
-if (iscell(FileName ))
-    for i = 1:max(size(FileName))
-        Songs{i,1} = FileName(i);
-        Songs{i,2} = PathName;
-    end
+[y,Fs] = audioread(pathname);
+% sound(y,Fs);
+
+global y_matrix;
+y_matrix = y;
+global Fs_matrix;
+Fs_matrix = Fs;
+global audio;
+audio = audioplayer (y_matrix, Fs_matrix);
+
+handles.pathname = 0;
+guidata(hObject,handles)
+
+if handles.pathname == 0
+    play(audio);
 else
-   Songs{1,1} = {FileName};
-   Songs{1,2} = PathName;
+    resume(audio);
 end
 
 % --- Executes on button press in btnStop.
@@ -293,4 +301,18 @@ function btnStop_Callback(hObject, eventdata, handles)
 % hObject    handle to btnStop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-clear sound
+global audio;
+stop(audio)
+handles.pathname = 0;
+guidata(hObject,handles)
+
+
+% --- Executes on button press in btnPause.
+function btnPause_Callback(hObject, eventdata, handles)
+% hObject    handle to btnPause (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global audio;
+pause(audio);
+handles.pathname = 1;
+guidata(hObject,handles)
