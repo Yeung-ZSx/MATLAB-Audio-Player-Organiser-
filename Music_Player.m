@@ -22,7 +22,7 @@ function varargout = Music_Player(varargin)
 
 % Edit the above text to modify the response to help Music_Player
 
-% Last Modified by GUIDE v2.5 29-Apr-2017 15:20:24
+% Last Modified by GUIDE v2.5 29-Apr-2017 20:01:53
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -289,12 +289,8 @@ audio = audioplayer (y_matrix, Fs_matrix);
 
 handles.pathname = 0;
 guidata(hObject,handles)
+play(audio);
 
-if handles.pathname == 0
-    play(audio);
-else
-    resume(audio);
-end
 
 % --- Executes on button press in btnStop.
 function btnStop_Callback(hObject, eventdata, handles)
@@ -313,6 +309,69 @@ function btnPause_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global audio;
-pause(audio);
+if handles.pathname == 0;
+    pause(audio);
+else
+    handles.pathname == 1;
+
+end
 handles.pathname = 1;
 guidata(hObject,handles)
+
+
+% --- Executes on button press in btnResume.
+function btnResume_Callback(hObject, eventdata, handles)
+% hObject    handle to btnResume (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global audio;
+if handles.pathname == 1
+    resume(audio);
+end
+handles.pathname = 0;
+guidata(hObject,handles)
+
+
+% --- Executes on slider movement.
+function sliderVolume_Callback(hObject, eventdata, handles)
+% hObject    handle to sliderVolume (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+global y_matrix;
+global Fs_matrix;
+global audio;
+
+slider = get(hObject,'value');
+if slider == 2
+    x = y_matrix*5; % Increase volume
+    audio = audioplayer(x, Fs_matrix);
+    play(audio,[1 (get(audio,'SampleRate')*3)]);
+elseif slider == 0
+    x = y_matrix/5; % Decrease volume
+    audio = audioplayer(x, Fs_matrix);
+    play(audio,[1 (get(audio, 'SampleRate')*3)]);
+% elseif slider == 0
+%     x = y_matrix*0; % Mute volume
+%     audio = audioplayer(x, Fs_matrix);
+%     play(audio,[1 (get(audio, 'SampleRate')*3)]);
+end
+    
+
+
+
+% --- Executes during object creation, after setting all properties.
+function sliderVolume_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to sliderVolume (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+set(hObject, 'min', 0);
+set(hObject, 'max', 2);
+set(hObject, 'value', 1);
