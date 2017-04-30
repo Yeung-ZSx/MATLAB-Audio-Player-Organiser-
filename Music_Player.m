@@ -22,7 +22,7 @@ function varargout = Music_Player(varargin)
 
 % Edit the above text to modify the response to help Music_Player
 
-% Last Modified by GUIDE v2.5 29-Apr-2017 20:01:53
+% Last Modified by GUIDE v2.5 30-Apr-2017 18:27:12
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -348,19 +348,17 @@ slider = get(hObject,'value');
 if slider == 2
     x = y_matrix*5; % Increase volume
     audio = audioplayer(x, Fs_matrix);
-    play(audio,[1 (get(audio,'SampleRate')*3)]);
+    play(audio,[(get(audio,'SampleRate')*1)]);
 elseif slider == 0
     x = y_matrix/5; % Decrease volume
     audio = audioplayer(x, Fs_matrix);
-    play(audio,[1 (get(audio, 'SampleRate')*3)]);
+    play(audio,[(get(audio, 'SampleRate')*1)]);
 % elseif slider == 0
 %     x = y_matrix*0; % Mute volume
 %     audio = audioplayer(x, Fs_matrix);
 %     play(audio,[1 (get(audio, 'SampleRate')*3)]);
+guidata(hObject,handles)
 end
-    
-
-
 
 % --- Executes during object creation, after setting all properties.
 function sliderVolume_CreateFcn(hObject, eventdata, handles)
@@ -375,3 +373,5 @@ end
 set(hObject, 'min', 0);
 set(hObject, 'max', 2);
 set(hObject, 'value', 1);
+    
+   
