@@ -22,7 +22,11 @@ function varargout = Music_Player(varargin)
 
 % Edit the above text to modify the response to help Music_Player
 
+<<<<<<< HEAD
 % Last Modified by GUIDE v2.5 01-May-2017 00:16:47
+=======
+% Last Modified by GUIDE v2.5 30-Apr-2017 18:27:12
+>>>>>>> origin/master
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -352,6 +356,7 @@ slider = get(hObject,'value');
 if slider == 25
     x = y_matrix; % Same volume
     audio = audioplayer(x, Fs_matrix);
+<<<<<<< HEAD
     play(audio,[(get(audio, 'SampleRate')*1)]);
 else
     x = y_matrix*slider; % Max volume
@@ -359,6 +364,19 @@ else
     play(audio,[(get(audio,'SampleRate')*1)]);
 end
 guidata(hObject,handles)
+=======
+    play(audio,[(get(audio,'SampleRate')*1)]);
+elseif slider == 0
+    x = y_matrix/5; % Decrease volume
+    audio = audioplayer(x, Fs_matrix);
+    play(audio,[(get(audio, 'SampleRate')*1)]);
+% elseif slider == 0
+%     x = y_matrix*0; % Mute volume
+%     audio = audioplayer(x, Fs_matrix);
+%     play(audio,[1 (get(audio, 'SampleRate')*3)]);
+guidata(hObject,handles)
+end
+>>>>>>> origin/master
 
 % --- Executes during object creation, after setting all properties.
 function sliderVolume_CreateFcn(hObject, eventdata, handles)
@@ -375,6 +393,7 @@ set(hObject, 'max', 50);
 set(hObject, 'value', 1);
     
    
+<<<<<<< HEAD
 
 
 
@@ -572,3 +591,5 @@ y_matrix = newY;
 Fs_matrix = fs;
 audio = audioplayer (y_matrix, Fs_matrix);
 play(audio);
+=======
+>>>>>>> origin/master
