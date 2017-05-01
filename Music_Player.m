@@ -22,7 +22,7 @@ function varargout = Music_Player(varargin)
 
 % Edit the above text to modify the response to help Music_Player
 
-% Last Modified by GUIDE v2.5 29-Apr-2017 20:01:53
+% Last Modified by GUIDE v2.5 01-May-2017 00:16:47
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -149,6 +149,7 @@ function lst_NewPlaylist_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
 
 
 % --- Executes on button press in btn_Add.
@@ -279,13 +280,16 @@ pathname
 
 [y,Fs] = audioread(pathname);
 % sound(y,Fs);
-
 global y_matrix;
 y_matrix = y;
 global Fs_matrix;
 Fs_matrix = Fs;
+
+
 global audio;
 audio = audioplayer (y_matrix, Fs_matrix);
+cla reset
+plotting(y, Fs, 'b', handles);
 
 handles.pathname = 0;
 guidata(hObject,handles)
@@ -345,22 +349,16 @@ global Fs_matrix;
 global audio;
 
 slider = get(hObject,'value');
-if slider == 2
-    x = y_matrix*5; % Increase volume
+if slider == 25
+    x = y_matrix; % Same volume
     audio = audioplayer(x, Fs_matrix);
-    play(audio,[1 (get(audio,'SampleRate')*3)]);
-elseif slider == 0
-    x = y_matrix/5; % Decrease volume
+    play(audio,[(get(audio, 'SampleRate')*1)]);
+else
+    x = y_matrix*slider; % Max volume
     audio = audioplayer(x, Fs_matrix);
-    play(audio,[1 (get(audio, 'SampleRate')*3)]);
-% elseif slider == 0
-%     x = y_matrix*0; % Mute volume
-%     audio = audioplayer(x, Fs_matrix);
-%     play(audio,[1 (get(audio, 'SampleRate')*3)]);
+    play(audio,[(get(audio,'SampleRate')*1)]);
 end
-    
-
-
+guidata(hObject,handles)
 
 % --- Executes during object creation, after setting all properties.
 function sliderVolume_CreateFcn(hObject, eventdata, handles)
@@ -373,5 +371,204 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 set(hObject, 'min', 0);
-set(hObject, 'max', 2);
+set(hObject, 'max', 50);
 set(hObject, 'value', 1);
+    
+   
+
+
+
+function edtWahFs_Callback(hObject, eventdata, handles)
+% hObject    handle to edtWahFs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edtWahFs as text
+%        str2double(get(hObject,'String')) returns contents of edtWahFs as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edtWahFs_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edtWahFs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edtWahMax_Callback(hObject, eventdata, handles)
+% hObject    handle to edtWahMax (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edtWahMax as text
+%        str2double(get(hObject,'String')) returns contents of edtWahMax as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edtWahMax_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edtWahMax (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edtWahMin_Callback(hObject, eventdata, handles)
+% hObject    handle to edtWahMin (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edtWahMin as text
+%        str2double(get(hObject,'String')) returns contents of edtWahMin as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edtWahMin_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edtWahMin (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in btnWaheffect.
+function btnWaheffect_Callback(hObject, eventdata, handles)
+% hObject    handle to btnWaheffect (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% % % % % global audio;
+% % % % % global y_matrix;
+% % % % % global Fs_matrix;
+% % % % % global newY;
+% % % % % %%%%%%
+min = get(handles.edtWahMin, 'String')
+max = get(handles.edtWahMax, 'String')
+Fw = get(handles.edtWahFs, 'String')
+global y_matrix;
+global Fs_matrix;
+global audio;
+[yb, input_fs] = wahwah_effect(y_matrix, Fs_matrix, 0.05, str2double(min), str2double(max), str2double(Fw));
+y_matrix = yb;
+Fs_matrix = input_fs;
+audio = audioplayer (y_matrix, Fs_matrix);
+play(audio);
+plotting(y_matrix, Fs_matrix, 'r', handles);
+
+
+% --- Executes on slider movement.
+function sliderWah_freq_Callback(hObject, eventdata, handles)
+% hObject    handle to sliderWah_freq (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function sliderWah_freq_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to sliderWah_freq (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function sliderWah_max_Callback(hObject, eventdata, handles)
+% hObject    handle to sliderWah_max (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function sliderWah_max_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to sliderWah_max (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function sliderWah_min_Callback(hObject, eventdata, handles)
+% hObject    handle to sliderWah_min (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function sliderWah_min_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to sliderWah_min (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on button press in btnPlayList.
+function btnPlayList_Callback(hObject, eventdata, handles)
+% hObject    handle to btnPlayList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+SongsPath = handles.data{1}; %song name, path
+PlayList = handles.data{2}; %list names
+list_listNames = findobj('Tag', 'Playlist');%'findobj' to get the whole object
+selectedListIndex = get(list_listNames,'Value');
+songs = PlayList{selectedListIndex,2};
+newY = [];
+%merge all the songs in one song
+for i = 1:size(songs,1)
+    for j = 1:size(SongsPath(:,1), 1)
+        songs(i)
+        SongsPath{j, 1}
+        strcmp(songs(i),SongsPath{j, 1})
+        if strcmp(songs(i),SongsPath{j, 1}) == 1
+            name = SongsPath{j,1};
+            path = SongsPath{j,2};
+            pathname = char(strcat(path,name));
+            [y, fs] = audioread(pathname);
+            newY = [newY;y];
+        end
+    end
+end
+
+
+global audio;
+global y_matrix;
+global Fs_matrix;
+y_matrix = newY;
+Fs_matrix = fs;
+audio = audioplayer (y_matrix, Fs_matrix);
+play(audio);
