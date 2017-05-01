@@ -1,4 +1,4 @@
 close all;
-clear;
+clear;  
 clc;
 Music_Player
