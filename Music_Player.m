@@ -22,11 +22,11 @@ function varargout = Music_Player(varargin)
 
 % Edit the above text to modify the response to help Music_Player
 
-<<<<<<< HEAD
-% Last Modified by GUIDE v2.5 01-May-2017 00:16:47
-=======
-% Last Modified by GUIDE v2.5 30-Apr-2017 18:27:12
->>>>>>> origin/master
+% <<<<<<< HEAD
+% % Last Modified by GUIDE v2.5 01-May-2017 00:16:47
+% =======
+% % Last Modified by GUIDE v2.5 30-Apr-2017 18:27:12
+% >>>>>>> origin/master
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -356,7 +356,6 @@ slider = get(hObject,'value');
 if slider == 25
     x = y_matrix; % Same volume
     audio = audioplayer(x, Fs_matrix);
-<<<<<<< HEAD
     play(audio,[(get(audio, 'SampleRate')*1)]);
 else
     x = y_matrix*slider; % Max volume
@@ -364,19 +363,7 @@ else
     play(audio,[(get(audio,'SampleRate')*1)]);
 end
 guidata(hObject,handles)
-=======
-    play(audio,[(get(audio,'SampleRate')*1)]);
-elseif slider == 0
-    x = y_matrix/5; % Decrease volume
-    audio = audioplayer(x, Fs_matrix);
-    play(audio,[(get(audio, 'SampleRate')*1)]);
-% elseif slider == 0
-%     x = y_matrix*0; % Mute volume
-%     audio = audioplayer(x, Fs_matrix);
-%     play(audio,[1 (get(audio, 'SampleRate')*3)]);
-guidata(hObject,handles)
-end
->>>>>>> origin/master
+
 
 % --- Executes during object creation, after setting all properties.
 function sliderVolume_CreateFcn(hObject, eventdata, handles)
@@ -392,11 +379,7 @@ set(hObject, 'min', 0);
 set(hObject, 'max', 50);
 set(hObject, 'value', 1);
     
-   
-<<<<<<< HEAD
-
-
-
+  
 function edtWahFs_Callback(hObject, eventdata, handles)
 % hObject    handle to edtWahFs (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -404,7 +387,7 @@ function edtWahFs_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of edtWahFs as text
 %        str2double(get(hObject,'String')) returns contents of edtWahFs as a double
-
+set(handles.sliderWah_freq, 'Value', str2double(get(hObject,'String')));
 
 % --- Executes during object creation, after setting all properties.
 function edtWahFs_CreateFcn(hObject, eventdata, handles)
@@ -427,7 +410,7 @@ function edtWahMax_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of edtWahMax as text
 %        str2double(get(hObject,'String')) returns contents of edtWahMax as a double
-
+set(handles.sliderWah_max, 'Value', str2double(get(hObject,'String')));
 
 % --- Executes during object creation, after setting all properties.
 function edtWahMax_CreateFcn(hObject, eventdata, handles)
@@ -450,7 +433,7 @@ function edtWahMin_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of edtWahMin as text
 %        str2double(get(hObject,'String')) returns contents of edtWahMin as a double
-
+set(handles.sliderWah_min, 'Value', str2double(get(hObject,'String')));
 
 % --- Executes during object creation, after setting all properties.
 function edtWahMin_CreateFcn(hObject, eventdata, handles)
@@ -470,23 +453,22 @@ function btnWaheffect_Callback(hObject, eventdata, handles)
 % hObject    handle to btnWaheffect (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% % % % % global audio;
-% % % % % global y_matrix;
-% % % % % global Fs_matrix;
-% % % % % global newY;
-% % % % % %%%%%%
-min = get(handles.edtWahMin, 'String')
-max = get(handles.edtWahMax, 'String')
-Fw = get(handles.edtWahFs, 'String')
+
+min = get(handles.sliderWah_min, 'Value');
+max = get(handles.sliderWah_max, 'Value');
+Fw = get(handles.sliderWah_freq, 'Value');
 global y_matrix;
 global Fs_matrix;
 global audio;
-[yb, input_fs] = wahwah_effect(y_matrix, Fs_matrix, 0.05, str2double(min), str2double(max), str2double(Fw));
+[yb, input_fs] = wahwah_effect(y_matrix, Fs_matrix, 0.05, min, max, Fw);
 y_matrix = yb;
 Fs_matrix = input_fs;
+stop(audio);
 audio = audioplayer (y_matrix, Fs_matrix);
+cla reset
 play(audio);
 plotting(y_matrix, Fs_matrix, 'r', handles);
+
 
 
 % --- Executes on slider movement.
@@ -497,7 +479,7 @@ function sliderWah_freq_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+set(handles.edtWahFs, 'String', get(hObject,'value'));
 
 % --- Executes during object creation, after setting all properties.
 function sliderWah_freq_CreateFcn(hObject, eventdata, handles)
@@ -519,7 +501,7 @@ function sliderWah_max_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+set(handles.edtWahMax, 'String', get(hObject,'value'));
 
 % --- Executes during object creation, after setting all properties.
 function sliderWah_max_CreateFcn(hObject, eventdata, handles)
@@ -541,7 +523,7 @@ function sliderWah_min_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+set(handles.edtWahMin, 'String', get(hObject,'value'));
 
 % --- Executes during object creation, after setting all properties.
 function sliderWah_min_CreateFcn(hObject, eventdata, handles)
@@ -591,5 +573,4 @@ y_matrix = newY;
 Fs_matrix = fs;
 audio = audioplayer (y_matrix, Fs_matrix);
 play(audio);
-=======
->>>>>>> origin/master
+
