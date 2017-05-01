@@ -307,6 +307,7 @@ function btnStop_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global audio;
 stop(audio)
+cla reset
 handles.pathname = 0;
 guidata(hObject,handles)
 
@@ -353,7 +354,7 @@ global Fs_matrix;
 global audio;
 
 slider = get(hObject,'value');
-if slider == 25
+if slider == 10
     x = y_matrix; % Same volume
     audio = audioplayer(x, Fs_matrix);
     play(audio,[(get(audio, 'SampleRate')*1)]);
@@ -376,7 +377,7 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 set(hObject, 'min', 0);
-set(hObject, 'max', 50);
+set(hObject, 'max', 20);
 set(hObject, 'value', 1);
     
   
@@ -445,29 +446,34 @@ function edtWahMin_CreateFcn(hObject, eventdata, handles)
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
-end
 
+end
 
 % --- Executes on button press in btnWaheffect.
 function btnWaheffect_Callback(hObject, eventdata, handles)
 % hObject    handle to btnWaheffect (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% % handles    structureSXZ with handles and user data (see GUIDATA)
+global y_matrix;
+global Fs_matrix;
+global audio;
+global new_y_matrix;
+
 
 min = get(handles.sliderWah_min, 'Value');
 max = get(handles.sliderWah_max, 'Value');
 Fw = get(handles.sliderWah_freq, 'Value');
-global y_matrix;
-global Fs_matrix;
-global audio;
-[yb, input_fs] = wahwah_effect(y_matrix, Fs_matrix, 0.05, min, max, Fw);
-y_matrix = yb;
-Fs_matrix = input_fs;
+
+new_y_matrix = wahwah_effect(y_matrix, Fs_matrix, 0.05, min, max, Fw);
+% [yb, input_fs] = new_y_matrix
+% y_matrix = yb;
+% Fs_matrix = input_fs;
 stop(audio);
-audio = audioplayer (y_matrix, Fs_matrix);
+audio = audioplayer (new_y_matrix, Fs_matrix);
 cla reset
 play(audio);
-plotting(y_matrix, Fs_matrix, 'r', handles);
+plotting(y_matrix, Fs_matrix, 'b', handles);
+plotting(new_y_matrix, Fs_matrix, 'r', handles);
 
 
 
@@ -571,6 +577,10 @@ global y_matrix;
 global Fs_matrix;
 y_matrix = newY;
 Fs_matrix = fs;
+stop(audio);
 audio = audioplayer (y_matrix, Fs_matrix);
+cla reset
 play(audio);
+plotting(y_matrix, Fs_matrix, 'b', handles);
+
 
